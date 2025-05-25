@@ -6,6 +6,8 @@ import com.example.vitualgiving.dto.SignupRequest;
 import com.example.vitualgiving.models.User;
 import com.example.vitualgiving.repos.UserRepository;
 import com.example.vitualgiving.security.JwtUtil;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,7 +26,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody SignupRequest request) {
+    public ResponseEntity<?> signup(@RequestBody @Valid SignupRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body("Email is already in use");
         }
@@ -43,8 +45,9 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        authenticationManager.authenticate(
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
+      
+            authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
 
@@ -54,5 +57,6 @@ public class AuthController {
         String token = jwtUtil.generateToken(user.getEmail());
 
         return ResponseEntity.ok(new AuthResponse(token, user.getEmail(), user.getRole()));
+      
     }
 }

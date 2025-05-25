@@ -1,6 +1,5 @@
 package com.example.vitualgiving.dto;
 
-import com.example.vitualgiving.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -21,5 +20,6 @@ public class SignupRequest {
     @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
 
-    private Role role;
+    @NotBlank(message = "role is required")
+    private String role;
 }

@@ -1,6 +1,5 @@
 package com.example.vitualgiving.models;
 
-import com.example.vitualgiving.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import jakarta.validation.constraints.*;
@@ -29,8 +28,7 @@ public class User {
     private String password;
 
     @NotBlank(message = "Role is required")
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    private String role;
 
 }
 
