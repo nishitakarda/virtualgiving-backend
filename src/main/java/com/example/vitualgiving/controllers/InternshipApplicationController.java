@@ -18,7 +18,7 @@ import com.example.vitualgiving.repos.UserRepository;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/applications")
+@RequestMapping("/api/applications")
 @RequiredArgsConstructor
 public class InternshipApplicationController {
 
