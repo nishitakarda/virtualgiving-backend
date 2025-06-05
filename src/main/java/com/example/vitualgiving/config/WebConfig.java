@@ -13,11 +13,14 @@ public class WebConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("https://virtualgivingfrontend.onrender.com") // frontend origin
+                registry.addMapping("/**")  // ✅ Apply CORS to all routes
+                        .allowedOrigins(
+                            "http://localhost:5173",
+                            "https://virtualgivingfrontend.onrender.com"
+                        )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
-                        .allowCredentials(true);  // important for cookies/auth
+                        .allowCredentials(true);
             }
         };
     }
