@@ -1,5 +1,6 @@
 package com.example.vitualgiving.services;
 
+import com.example.vitualgiving.dto.MentorshipResponse;
 import com.example.vitualgiving.models.Mentorship;
 import com.example.vitualgiving.models.MentorshipRegistration;
 import com.example.vitualgiving.models.User;
@@ -24,25 +25,31 @@ public class MentorshipRegistrationService {
 
     // Request mentorship registration (student or org)
     public MentorshipRegistration requestMentorship(Long mentorshipId, String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        Mentorship mentorship = mentorshipRepository.findById(mentorshipId)
-                .orElseThrow(() -> new RuntimeException("Mentorship not found"));
-
-        mentorshipRegistrationRepository.findByUserAndMentorship(user, mentorship)
-                .ifPresent(reg -> {
-                    throw new IllegalStateException("You have already requested mentorship registration.");
-                });
-
-        MentorshipRegistration registration = MentorshipRegistration.builder()
-                .user(user)
-                .mentorship(mentorship)
-                .status("PENDING")
-                .build();
-
-        return mentorshipRegistrationRepository.save(registration);
+    // Check if user role is allowed to request mentorship (student or organization)
+    if (!(user.getRole().equalsIgnoreCase("STUDENT") || user.getRole().equalsIgnoreCase("ORGANIZATION"))) {
+        throw new IllegalStateException("Only students or organizations can request mentorship.");
     }
+
+    Mentorship mentorship = mentorshipRepository.findById(mentorshipId)
+            .orElseThrow(() -> new RuntimeException("Mentorship not found"));
+
+    mentorshipRegistrationRepository.findByUserAndMentorship(user, mentorship)
+            .ifPresent(reg -> {
+                throw new IllegalStateException("You have already requested mentorship registration.");
+            });
+
+    MentorshipRegistration registration = MentorshipRegistration.builder()
+            .user(user)
+            .mentorship(mentorship)
+            .status("PENDING")
+            .build();
+
+    return mentorshipRegistrationRepository.save(registration);
+}
+
 
     // Mentor updates registration status (ACCEPTED or REJECTED)
     public MentorshipRegistration updateRegistrationStatus(Long registrationId, String email, String status) {
@@ -89,4 +96,28 @@ public class MentorshipRegistrationService {
 
         return mentorshipRegistrationRepository.findByUser(user);
     }
+
+    // Return all accepted mentorships for a user with meeting link and password
+    public List<MentorshipResponse> getAcceptedMentorshipsWithMeetingDetails(String email) {
+         User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        List<MentorshipRegistration> acceptedRegs = mentorshipRegistrationRepository
+                .findByUserAndStatus(user, "ACCEPTED");
+
+        return acceptedRegs.stream()
+                .map(reg -> {
+                    Mentorship mentorship = reg.getMentorship();
+                    return MentorshipResponse.builder()
+                        .mentorshipId(mentorship.getId())
+                        .topic(mentorship.getTopic())
+                        .description(mentorship.getDescription())
+                        .dateTime(mentorship.getDateTime())
+                        .status(reg.getStatus())
+                        .meetingLink(mentorship.getMeetingLink())
+                        .meetingPassword(mentorship.getMeetingPassword())
+                        .build();
+            }).toList();
+}
+
 }

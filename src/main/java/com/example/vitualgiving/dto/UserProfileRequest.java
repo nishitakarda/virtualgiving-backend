@@ -1,34 +1,20 @@
-package com.example.vitualgiving.models;
+package com.example.vitualgiving.dto;
 
-import jakarta.persistence.*;
-import lombok.*;
 import jakarta.validation.constraints.*;
+import lombok.*;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "users")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class UserProfileRequest {
     @NotBlank(message = "Name is required")
     private String name;
 
     @Email(message = "Invalid email format")
     @NotBlank(message = "Email is required")
-    @Column(unique = true)
     private String email;
-
-    @NotBlank(message = "Password is required")
-    private String password;
-
-    @NotBlank(message = "Role is required")
-    private String role;
 
     @NotBlank(message = "Phone number is required")
     @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be exactly 10 digits")
@@ -54,6 +40,4 @@ public class User {
 
     @NotBlank(message = "Resume link is required")
     private String resume;
-
 }
-

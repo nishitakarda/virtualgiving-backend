@@ -8,4 +8,6 @@ public interface MentorshipRegistrationRepository extends JpaRepository<Mentorsh
     List<MentorshipRegistration> findByUser(User user);
     List<MentorshipRegistration> findByMentorship(Mentorship mentorship);
     Optional<MentorshipRegistration> findByUserAndMentorship(User user, Mentorship mentorship);
+    List<MentorshipRegistration> findByUserAndStatus(User user, String status);
+
 }
