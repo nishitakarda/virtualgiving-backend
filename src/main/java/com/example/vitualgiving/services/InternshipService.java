@@ -30,11 +30,11 @@ public class InternshipService {
 
         Internship internship = new Internship();
         internship.setTitle(request.getTitle());
+        internship.setCompanyName(request.getCompanyName());
         internship.setDescription(request.getDescription());
         internship.setLocation(request.getLocation());
-        internship.setStartDate(request.getStartDate());
-        internship.setEndDate(request.getEndDate());
-        internship.setDurationWeeks(request.getDurationWeeks());
+        internship.setSalary(request.getSalary());
+        internship.setDurationMonths(request.getDurationMonths());
         internship.setPostedBy(user);
 
         return internshipRepository.save(internship);

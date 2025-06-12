@@ -37,22 +37,17 @@ public class User {
     @NotBlank(message = "City is required")
     private String city;
 
-    @NotBlank(message = "GitHub profile is required")
     private String github;
 
-    @NotBlank(message = "LinkedIn profile is required")
     private String linkedin;
 
-    @NotBlank(message = "Course is required")
     private String course;
 
-    @NotBlank(message = "College is required")
     private String college;
 
-    @NotBlank(message = "Graduation Year is required")
+     @NotBlank(message = "Graduation Year is required")
     private String graduationYear;
 
-    @NotBlank(message = "Resume link is required")
     private String resume;
 
 }

@@ -25,7 +25,13 @@ public class InternshipApplication {
     @NotNull
     private Internship internship;
 
-    private String status = "PENDING"; // PENDING, SELECTED, REJECTED
+    private String status; // PENDING, SELECTED, REJECTED
 
-    private LocalDateTime appliedAt = LocalDateTime.now();
+    private LocalDateTime appliedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.appliedAt = LocalDateTime.now();
+        this.status = "PENDING";
+    }
 }

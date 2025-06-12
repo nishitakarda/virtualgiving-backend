@@ -19,6 +19,9 @@ public class Internship {
     @NotBlank(message = "Title is required")
     private String title;
 
+    @NotBlank(message = "Company Name is required")
+    private String companyName;
+
     @NotBlank(message = "Description is required")
     @Column(columnDefinition = "TEXT")
     private String description;
@@ -26,20 +29,16 @@ public class Internship {
     @NotBlank(message = "Location is required")
     private String location;
 
-    @NotNull(message = "Start date is required")
-    private LocalDate startDate;
+    @NotBlank(message = "Salary is required")
+    private String salary;
 
-    @NotNull(message = "End date is required")
-    private LocalDate endDate;
-
-    @NotNull(message = "Duration is required")
-    @Min(value = 1, message = "Duration must be at least 1 week")
-    private Integer durationWeeks;
+    @NotBlank(message = "Duration is required")
+    private String durationMonths;
 
     @ManyToOne
     @JoinColumn(name = "posted_by_id", nullable = false)
     private User postedBy;
 
     @Column(updatable = false)
-    private LocalDate postedAt = LocalDate.now();
+    private final LocalDate postedAt = LocalDate.now();
 }
