@@ -62,4 +62,10 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponse(token, user.getEmail(), user.getRole()));
       
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        return ResponseEntity.ok("Logged out successfully");
+    }
+
 }
