@@ -1,17 +1,21 @@
 package com.example.virtualgiving.controllers;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
-import com.example.virtualgiving.dto.*;
-import com.example.virtualgiving.models.Admin;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.virtualgiving.dto.AdminUserVerificationRequest;
+import com.example.virtualgiving.dto.DonationStatusUpdateDTO;
 import com.example.virtualgiving.models.DonationRequest;
 import com.example.virtualgiving.models.User;
-import com.example.virtualgiving.security.JwtUtil;
 import com.example.virtualgiving.services.AdminService;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -19,24 +23,6 @@ import java.util.List;
 public class AdminController {
 
     private final AdminService adminService;
-    private final JwtUtil jwtUtil;
-
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AdminLoginRequest request) {
-        Admin admin = adminService.findByEmail(request.getEmail());
-
-        if (admin == null) {
-            return ResponseEntity.status(401).body("Invalid admin email");
-        }
-
-        if (!adminService.checkPassword(request.getPassword(), admin.getPassword())) {
-            return ResponseEntity.status(401).body("Invalid password");
-        }
-
-        String token = jwtUtil.generateToken(admin.getEmail());
-
-        return ResponseEntity.ok(new AuthResponse(token, admin.getEmail(), "ADMIN"));
-    }
 
     @GetMapping("/pending-users")
     public ResponseEntity<List<User>> getPendingUsers() {

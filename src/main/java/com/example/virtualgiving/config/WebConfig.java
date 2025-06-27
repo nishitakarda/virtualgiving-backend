@@ -13,8 +13,8 @@ public class WebConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")  // ✅ Apply CORS to all routes
-                        .allowedOrigins(
+                registry.addMapping("/**")
+                        .allowedOriginPatterns(
                             "http://localhost:5173",
                             "https://virtualgivingfrontend.onrender.com"
                         )

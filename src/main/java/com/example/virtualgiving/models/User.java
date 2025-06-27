@@ -51,6 +51,9 @@ public class User {
 
     private String resume;
 
+    @OneToOne(mappedBy = "user")
+    private ForgotPassword forgotPassword;
+
     @Enumerated(EnumType.STRING)
     private Status status; 
 

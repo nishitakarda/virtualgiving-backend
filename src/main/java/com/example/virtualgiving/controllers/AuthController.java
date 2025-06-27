@@ -8,13 +8,16 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.virtualgiving.dto.AdminLoginRequest;
 import com.example.virtualgiving.dto.AuthResponse;
 import com.example.virtualgiving.dto.LoginRequest;
 import com.example.virtualgiving.dto.SignupRequest;
 import com.example.virtualgiving.enums.Status;
+import com.example.virtualgiving.models.Admin;
 import com.example.virtualgiving.models.User;
 import com.example.virtualgiving.repos.UserRepository;
 import com.example.virtualgiving.security.JwtUtil;
+import com.example.virtualgiving.services.AdminService;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -25,6 +28,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
+     private final AdminService adminService;
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody @Valid SignupRequest request) {
@@ -70,6 +74,25 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<?> logout() {
         return ResponseEntity.ok("Logged out successfully");
+    }
+
+    // *** ADMIN LOGIN ***
+
+    @PostMapping("/admin-login")
+    public ResponseEntity<?> login(@RequestBody AdminLoginRequest request) {
+        Admin admin = adminService.findByEmail(request.getEmail());
+
+        if (admin == null) {
+            return ResponseEntity.status(401).body("Invalid admin email");
+        }
+
+        if (!adminService.checkPassword(request.getPassword(), admin.getPassword())) {
+            return ResponseEntity.status(401).body("Invalid password");
+        }
+
+        String token = jwtUtil.generateToken(admin.getEmail());
+
+        return ResponseEntity.ok(new AuthResponse(token, admin.getEmail(), "ADMIN"));
     }
 
 }
